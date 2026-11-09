@@ -233,25 +233,25 @@ tbody tr:hover{background:#f2f8f4}
         <div class="grid">
 
             <div class="card">
-                <div class="metric-title">Suhu Sensor 1</div>
+                <div class="metric-title">Suhu Atas (GPIO 4)</div>
                 <div class="metric-value" id="suhu1">--</div>
                 <div class="unit">°C</div>
             </div>
 
             <div class="card">
-                <div class="metric-title">Kelembapan Sensor 1</div>
+                <div class="metric-title">Kelembapan Atas (GPIO 4)</div>
                 <div class="metric-value" id="lembap1">--</div>
                 <div class="unit">%</div>
             </div>
 
             <div class="card">
-                <div class="metric-title">Suhu Sensor 2</div>
+                <div class="metric-title">Suhu Bawah (GPIO 16)</div>
                 <div class="metric-value" id="suhu2">--</div>
                 <div class="unit">°C</div>
             </div>
 
             <div class="card">
-                <div class="metric-title">Kelembapan Sensor 2</div>
+                <div class="metric-title">Kelembapan Bawah (GPIO 16)</div>
                 <div class="metric-value" id="lembap2">--</div>
                 <div class="unit">%</div>
             </div>
@@ -261,7 +261,7 @@ tbody tr:hover{background:#f2f8f4}
         <!-- GRAFIK SUHU -->
 
         <div class="card">
-            <h3>Grafik Riwayat Suhu</h3>
+            <h3>Grafik Riwayat Suhu Atas dan Bawah</h3>
 
             <div class="chartBox">
                 <canvas id="temperatureChart"></canvas>
@@ -271,7 +271,7 @@ tbody tr:hover{background:#f2f8f4}
         <!-- GRAFIK KELEMBAPAN -->
 
         <div class="card">
-            <h3>Grafik Riwayat Kelembapan</h3>
+            <h3>Grafik Riwayat Kelembapan Atas dan Bawah</h3>
 
             <div class="chartBox">
                 <canvas id="humidityChart"></canvas>
@@ -303,10 +303,10 @@ tbody tr:hover{background:#f2f8f4}
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>Suhu 1 (°C)</th>
-                            <th>Kelembapan 1 (%)</th>
-                            <th>Suhu 2 (°C)</th>
-                            <th>Kelembapan 2 (%)</th>
+                            <th>Suhu Atas (°C)</th>
+                            <th>Kelembapan Atas (%)</th>
+                            <th>Suhu Bawah (°C)</th>
+                            <th>Kelembapan Bawah (%)</th>
                         </tr>
                     </thead>
 
@@ -331,7 +331,8 @@ tbody tr:hover{background:#f2f8f4}
             <h3>Informasi Sistem</h3>
 
             <p class="status">Pengendali: ESP32</p>
-            <p class="status">Sensor: 2 DHT22</p>
+            <p class="status">Sensor Atas: DHT22 (GPIO 4)</p>
+            <p class="status">Sensor Bawah: DHT22 (GPIO 16)</p>
             <p class="status">Database: Firebase Realtime Database</p>
             <p class="status">Data terbaru: greenhouse/latest</p>
             <p class="status">Data riwayat: greenhouse/history</p>
@@ -498,14 +499,14 @@ const temperatureChart = new Chart(
 
             datasets:[
                 {
-                    label:"Suhu Sensor 1",
+                    label:"Suhu Atas",
                     data:[],
                     borderColor:"#16865b",
                     backgroundColor:"#16865b",
                     tension:0.3
                 },
                 {
-                    label:"Suhu Sensor 2",
+                    label:"Suhu Bawah",
                     data:[],
                     borderColor:"#2878c7",
                     backgroundColor:"#2878c7",
@@ -547,14 +548,14 @@ const humidityChart = new Chart(
 
             datasets:[
                 {
-                    label:"Kelembapan Sensor 1",
+                    label:"Kelembapan Atas",
                     data:[],
                     borderColor:"#16865b",
                     backgroundColor:"#16865b",
                     tension:0.3
                 },
                 {
-                    label:"Kelembapan Sensor 2",
+                    label:"Kelembapan Bawah",
                     data:[],
                     borderColor:"#2878c7",
                     backgroundColor:"#2878c7",
@@ -610,10 +611,14 @@ function tampilkanLatest(data){
 
     if(!data)return;
 
-    tampilkanAngka("suhu1",data.suhu1);
-    tampilkanAngka("suhu2",data.suhu2);
+    // GPIO 4 = SENSOR ATAS
 
+    tampilkanAngka("suhu1",data.suhu1);
     tampilkanAngka("lembap1",data.lembap1);
+
+    // GPIO 16 = SENSOR BAWAH
+
+    tampilkanAngka("suhu2",data.suhu2);
     tampilkanAngka("lembap2",data.lembap2);
 
     document.getElementById("updateTime").textContent =
@@ -646,13 +651,13 @@ function(){
 
         "No":index+1,
 
-        "Suhu Sensor 1 (°C)":item.suhu1 ?? "",
+        "Suhu Atas (°C)":item.suhu1 ?? "",
 
-        "Kelembapan Sensor 1 (%)":item.lembap1 ?? "",
+        "Kelembapan Atas (%)":item.lembap1 ?? "",
 
-        "Suhu Sensor 2 (°C)":item.suhu2 ?? "",
+        "Suhu Bawah (°C)":item.suhu2 ?? "",
 
-        "Kelembapan Sensor 2 (%)":item.lembap2 ?? "",
+        "Kelembapan Bawah (%)":item.lembap2 ?? "",
 
         "Timestamp":item.timestamp ?? "",
 
